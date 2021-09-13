@@ -1,0 +1,47 @@
+﻿@model CrudNewProject.Models.EmployeeVM
+
+<style>
+    button a {
+        color: black;
+        text-decoration: none;
+    }
+
+        button a:hover, button a:focus {
+            color: white;
+            text-decoration: none;
+        }
+</style>
+@if (User.IsInRole("Admin"))
+{
+    
+    <h2>All Deleted List</h2>
+    
+    <table class="table">
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone No</th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.DeletedData)
+        {
+            <tr id="tableData">
+                <td>@item.FirstName</td>
+                <td>@item.LastName</td>
+                <td>@item.Email</td>
+                <td>@item.PhoneNo</td>
+                <td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a class="btn btn-primary" href="#" onclick="confirmRestore(@item.Id)">Restore</a>
+                        
+                    }
+                </td>
+            </tr>
+        }
+
+    </table>
+
+}

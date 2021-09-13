@@ -1,0 +1,54 @@
+﻿@model CrudNewProject.Models.CascadingModel
+
+<div class="form-group">
+    @if(ViewBag.CountryList != null)
+    {
+    @Html.LabelFor(model => model.CountryId, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.DropDownListFor(model => model.CountryId, ViewBag.CountryList as SelectList, "Select Your Country", new { @class = "form-control" })
+    </div>
+    }
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.StateId, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.DropDownListFor(model => model.StateId, new SelectList(""), "Select Your State", new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.CityId, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.DropDownListFor(model => model.CityId, new SelectList(""), "Select Your State", new { @class = "form-control" })
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#CountryId").change(function () {
+            $.get("/Employees/GetStateList", { CountryId: $("#CountryId").val() }, function (data) {
+                $("#StateId").empty();
+                $.each(data, function (index, raw) {
+                    $("#StateId").append("<option value = '" + raw.StateId + "'>" + raw.StateName+"</option>")
+                })
+            })
+        })
+    })
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#CityId").prop('disable', true)
+        $("#StateId").change(function () {
+            $.get("/Employees/GetCityList", { StateId: $("#StateId").val() }, function (data) {
+                $("#CityId").empty();
+                $.each(data, function (index, raw) {
+                    $("#CityId").append("<option value = '" + raw.CityId + "'>" + raw.CityName + "</option>")
+                })
+            })
+        })
+    })
+</script>
+

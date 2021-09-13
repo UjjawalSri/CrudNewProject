@@ -1,0 +1,141 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h3 class="modal-title">Delete Employee</h3>
+            </div>
+
+            <div class="modal-body">
+                <h4>Are You Sure to Delete Data from Database.</h4>
+
+                <div style="text-align:center; display:none" id="loaderDiv">
+                    <img src="~/Content/Walk.gif" width="150" />
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                <a href="#" class="btn btn-success" onclick="DeleteEmployee()">Confirm</a>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="hiddenEmployeeId" />
+</div>
+
+
+<div class="modal fade" id="myModal1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h3 class="modal-title">Restore Employees Data</h3>
+            </div>
+
+            <div class="modal-body">
+                <h4>Press Confirm to Restore Your Data.</h4>
+
+            </div>
+
+            <div class="modal-footer">
+                <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                <a href="#" class="btn btn-success" onclick="Restore()">Confirm</a>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="hiddenEmployeeId1" />
+</div>
+
+
+
+<div>
+    <div id="divGridAllData"></div>
+    <div id="divGridDeletedData"></div>
+   
+</div>
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        GetGridData();
+        GetGridDeletedData();  
+    });
+
+    function GetGridData() {
+        $.ajax({
+            url: '/Employees/GetResult',
+            type: 'GET',
+            success: function (response) {
+                $("#divGridAllData").html(response);
+                $("#divGridAllData").show();
+            }
+        })
+    }
+
+    function GetGridDeletedData() {
+        $.ajax({
+            url:'/Employees/DeletedList',
+            type:'GET',
+            success: function (response) {
+                $("#divGridDeletedData").html(response);
+                $("#divGridDeletedData").show();
+            }
+        });
+    }
+
+
+    var confirmDelete = function (EmployeeId) {
+        $("#hiddenEmployeeId").val(EmployeeId);
+        $("#myModal").modal("show");
+    };
+    var DeleteEmployee = function () {
+        $("#loaderDiv").show();
+        var empId= $("#hiddenEmployeeId").val();
+        $.ajax({
+            type:"POST",
+            url:"/Employees/DeleteEmployee",
+            data:{ EmployeeId: empId },
+            success: function (response) {
+                $("#loaderDiv").hide();
+                $("#myModal").modal("hide");
+                if (response == "1") {
+                    GetGridDeletedData();
+                    GetGridData();
+                }
+            },
+        });
+    }
+    var confirmRestore = function (empId)
+    {
+        $("#hiddenEmployeeId1").val(empId);
+        $("#myModal1").modal("show");
+    };
+    var Restore = function () {
+        var empId = $("#hiddenEmployeeId1").val();
+        $.ajax({
+            type: "GET",
+            url: "/Employees/Restore",
+            data: { empId: empId },
+            success: function (response) {
+                $("#myModal1").modal("hide");
+                if (response == "1") {
+                    GetGridData();
+                    GetGridDeletedData();
+                }
+            },
+        });
+    }
+</script>

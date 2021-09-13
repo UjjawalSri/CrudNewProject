@@ -1,0 +1,67 @@
+﻿@model CrudNewProject.Models.EmployeeModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+<style>
+    button a {
+        color: #0e0e0e;
+    }
+</style>
+<div>
+    @*<h4>EmployeeModel</h4>*@
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            First Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+
+        <dt>
+           Last Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
+        <dt>
+           Email
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            Phone No
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PhoneNo)
+        </dd>
+
+        <dt>
+           Password
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Password)
+        </dd>
+ 
+    </dl>
+</div>
+<p>
+    <button class="btn btn-primary">
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id })    
+    </button>
+
+    <button class="btn btn-primary">
+    @Html.ActionLink("Back to Get Result", "GetResult") 
+    </button>
+</p>

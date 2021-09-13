@@ -1,0 +1,97 @@
+﻿@model CrudNewProject.Models.EmployeeVM
+
+<h2>All Data</h2>
+<style>
+    button a {
+        color: #0e0e0e;
+    }
+
+        button a:hover {
+            color: white;
+            text-decoration: none;
+        }
+
+    #create a:hover {
+        color: black;
+        text-decoration: none;
+    }
+
+    .btn-primary a {
+        color: white;
+    }
+
+        .btn-primary a:hover {
+            color: black;
+            text-decoration: none;
+        }
+</style>
+<p>
+    @if (User.Identity.IsAuthenticated)
+    {
+        if (User.IsInRole("Admin"))
+        {
+            <button class="btn btn-secondary" id="create">
+                @Html.ActionLink("Create New", "Create")
+            </button>
+        }
+    }
+
+</p>
+<table class="table">
+    <tr>
+        <th>
+            First Name
+        </th>
+        <th>
+            Last Name
+        </th>
+        <th>
+            Email
+        </th>
+        <th>
+            Phone No
+        </th>
+        @if (User.IsInRole("Admin"))
+        {
+            <th>
+                Password
+            </th>
+        }
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.GetAllData)
+    {
+        <tr id="row_@item">
+            <td>@item.FirstName</td>
+            <td>@item.LastName</td>
+            <td> @item.Email </td>
+             <td>@item.PhoneNo</td>
+
+            @if (User.IsInRole("Admin"))
+            {
+                <td>@item.Password</td>
+            }
+            <td>
+                @if (User.IsInRole("Admin"))
+                {
+                    <button class="btn btn-success">
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                    </button>
+                }
+                <button class="btn btn-info">
+                    @Html.ActionLink("Details", "Details", new { id = item.Id })
+                </button>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a class="btn btn-danger" href="#" onclick="confirmDelete(@item.Id)">Delete </a>
+                }
+            </td>
+
+        </tr>
+    }
+
+
+</table>
+
+
